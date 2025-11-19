@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will It Snow in Preston?</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="https://em-content.zobj.net/source/apple/391/snowflake_2744-fe0f.png" />
+</head>
+<body>
+  <div class="container">
+    <h1>Will It Snow in Preston Today?</h1>
+    <div id="answer" class="answer loading">Loading…</div>
+
+    <div class="info">
+      <p>Temperature: <span id="temp">--</span>°C (feels <span id="feels">--</span>°C)</p>
+      <p>Condition: <span id="condition">--</span></p>
+      <p>Wind: <span id="wind">--</span> km/h</p>
+    </div>
+
+    <div class="rideable">
+      Rideable on the GS? <span id="rideable">--</span>
+    </div>
+
+    <div class="radar">
+      <img src="https://weather.bmcc.org.uk/wxradar_uk.php?width=600&height=400&fore=1" alt="Live UK radar">
+    </div>
+
+    <div class="quote" id="quote"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

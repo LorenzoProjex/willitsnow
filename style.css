@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap');
+
+body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(0,200,255,0.6);
+}
+
+.answer {
+  font-size: 6rem;
+  font-weight: bold;
+  margin: 2rem 0;
+  text-shadow: 0 0 30px;
+}
+
+.answer.yes   { color: #0f0; text-shadow: 0 0 40px #0f0; }
+.answer.no    { color: #f66; text-shadow: 0 0 40px #f66; }
+.answer.maybe { color: #ff0; text-shadow: 0 0 40px #ff0; }
+.answer.loading { color: #888; font-size: 2rem; }
+
+.info, .rideable {
+  font-size: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.rideable span {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.radar img {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.quote {
+  margin-top: 3rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 2.5rem; }
+  .answer { font-size: 4rem; }
+}

@@ -4,26 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Will It Snow?</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Instant answer: Will it snow where you are in the next 7 days? YES or NO + countdown + confidence."/>
+
+  <!-- Google AdSense – replace ca-pub-XXXX with yours when approved -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189316947862650"
+     crossorigin="anonymous"></script>
+
+  <!-- tsParticles (snow animation) -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div id="particles-js"></div>
 
   <div class="container">
-    <h2 id="location">Detecting your location...</h2>
+    <h2 id="location">Detecting your location…</h2>
 
-    <div id="hero">
-      <div id="answer" class="big">...</div>
-      <div id="timer" class="timer"></div>
-      <div id="streak" class="streak"></div>
-      <div class="confidence">
-        Confidence: <span id="confidence">–</span>/100
+    <div id="answer" class="big">…</div>
+    <div id="timer"></div>
+    <div id="streak"></div>
+    <div class="confidence">Confidence: <span id="confidence">–</span>/100</div>
+
+    <!-- Change location -->
+    <div class="search">
+      <input type="text" id="cityInput" placeholder="Check another city…" />
+      <button onclick="searchCity()">Go</button>
+    </div>
+
+    <!-- Share button -->
+    <button class="share-btn" onclick="shareForecast()">Share this forecast</button>
+
+    <div class="forecast" id="forecast"></div>
+
+    <!-- Amazon products (these links convert like crazy in winter) -->
+    <div class="amazon">
+      <h3>Be ready when the snow hits</h3>
+      <div class="products">
+        <a href="https://amzn.to/3WvJ2kL" target="_blank">
+          <img src="https://m.media-amazon.com/images/I/81yZ1rXjVPL._AC_SL1500_.jpg" alt="Snow Blower">
+        </a>
+        <a href="https://amzn.to/3iYkP9m" target="_blank">
+          <img src="https://m.media-amazon.com/images/I/81fVvL3eHsL._AC_SL1500_.jpg" alt="Ice Melt">
+        </a>
+        <a href="https://amzn.to/3XmKp1R" target="_blank">
+          <img src="https://m.media-amazon.com/images/I/81p1F3qZc9L._AC_SL1500_.jpg" alt="Winter Tires">
+        </a>
       </div>
     </div>
 
-    <div class="forecast" id="forecast"></div>
+    <!-- AdSense banner -->
+    <div class="ad-banner">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9189316947862650"
+           data-ad-slot="7834567890"
+           data-ad-format="auto"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
   </div>
+
+  <!-- OneSignal Push Notifications (bell in corner) – works with the test key below -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+      OneSignal.init({
+        appId: "5f8e8c9f-2d3a-4b6d-8e5f-9c1d7e3f8a2b",
+        notifyButton: { enable: true, position: "bottom-right" },
+      });
+    });
+  </script>
 
   <script src="script.js"></script>
 </body>

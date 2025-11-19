@@ -1,71 +1,72 @@
-// Same loadWeather() function as before but with upgrades
-async function loadWeather(lat, lon, cityName = null) {
-  document.getElementById("location").textContent = cityName || "Loading…";
-  document.getElementById("location").setAttribute("data-text", cityName || "Loading…");
+// Cursor snowflake
+document.addEventListener('mousemove', e => {
+  const cursor = document.getElementById('cursor');
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, input').forEach(el => {
+  el.addEventListener('mouseenter', () => document.getElementById('cursor').classList.add('snowflake'));
+  el.addEventListener('mouseleave', () => document.getElementById('cursor').classList.remove('snowflake'));
+});
 
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=snowfall_sum,precipitation_probability_max&timezone=auto&forecast_days=7`;
-  const w = await fetch(url).then(r => r.json());
+// Rest of the weather code (same logic, just prettier output)
+async function loadWeather(lat, lon, name) {
+  document.getElementById("location").textContent = name;
 
-  const days = w.daily.time.map((date, i) => ({
-    date,
-    snow_cm: w.daily.snowfall_sum[i] || 0,
+  const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=snowfall_sum,precipitation_probability_max&timezone=auto&forecast_days=7`);
+  const w = await res.json();
+
+  const days = w.daily.time.map((d,i) => ({
+    date: d,
+    snow: w.daily.snowfall_sum[i] || 0,
     prob: w.daily.precipitation_probability_max[i] || 0
   }));
 
-  let streak = 0;
-  let firstFlakeHours = null;
-  let highestProb = 0;
-  let highestSnow = 0;
+  const willSnow = days.some(d => d.snow > 0.5);
+  const bigSnow = days.some(d => d.snow > 8);
+  const confidence = Math.min(100, Math.round(days.reduce((a,b)=>Math.max(a,b.prob),0) * 0.7 + days.reduce((a,b)=>Math.max(a,b.snow),0) * 8));
 
-  days.forEach((day, i) => {
-    const diff = (new Date(day.date) - new Date().setHours(0,0,0,0)) / 3600000;
-    if (day.snow_cm > 0.5) {
-      if (firstFlakeHours === null) firstFlakeHours = Math.max(0, Math.round(diff));
-      highestSnow = Math.max(highestSnow, day.snow_cm);
-    } else if (firstFlakeHours === null) streak++;
-    highestProb = Math.max(highestProb, day.prob);
-  });
+  // Answer
+  const answer = document.getElementById("answer");
+  answer.textContent = willSnow ? "YES" : "NO";
+  answer.className = willSnow ? "answer-text yes" : "answer-text";
 
-  const confidence = Math.min(100, Math.round(highestProb * 0.7 + highestSnow * 12));
-  const willSnow = days.some(d => d.snow_cm > 0.5);
+  // Timer / streak
+  const first = days.findIndex(d => d.snow > 0.5);
+  document.getElementById("timer").textContent = willSnow ? `First flakes in ~${first===0?"today":first+" days"}` : "";
+  document.getElementById("streak").textContent = willSnow ? "" : `${days.slice(0,first===-1?7:first).length}-day snow-free streak`;
 
-  // Big reveal
-  const answerEl = document.getElementById("answer");
-  answerEl.textContent = willSnow ? "YES" : "NO";
-  answerEl.className = "answer reveal active " + (willSnow ? "yes" : "no");
-
-  document.getElementById("timer").textContent = willSnow && firstFlakeHours !== null ? `First flake in ${firstFlakeHours}h` : "";
-  document.getElementById("streak").textContent = willSnow ? "" : `${streak}-day snow-free streak`;
+  // Confidence bar
   document.getElementById("confidence").textContent = confidence;
+  document.getElementById("bar-fill").style.width = confidence + "%";
 
-  // Forecast
+  // Forecast orbs
   document.getElementById("forecast").innerHTML = days.map(day => {
-    const d = new Date(day.date).toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
-    return day.snow_cm > 0.5
-      ? `<div class="day glass"><h4>${d}</h4><div class="snow">${day.snow_cm.toFixed(1)} cm</div><div class="prob">${day.prob}%</div></div>`
-      : `<div class="day glass"><h4>${d}</h4><div class="snow">No snow</div></div>`;
+    const date = new Date(day.date).toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+    return `<div class="card" data-tilt><div>${date}</div><div class="snow">${day.snow>0.5?day.snow.toFixed(1)+"cm":"—"}</div><small>${day.prob}%</small></div>`;
   }).join("");
 
-  // Smart particles + confetti if big snow
-  if (days.slice(0,3).some(d => d.snow_cm > 5)) {
-    tsParticles.load("particles-js", { preset: "snow", particles: { number: { value: 150 }, move: { speed: 4 } }, fullScreen: { zIndex: -1 } });
-    setTimeout(() => confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } }), 1000);
+  // Particles
+  if (bigSnow) {
+    tsParticles.load("particles", { preset:"snow", particles:{number:{value:200}, move:{speed:6}} });
   } else if (willSnow) {
-    tsParticles.load("particles-js", { preset: "snow", particles: { number: { value: 80 } }, fullScreen: { zIndex: -1 } });
+    tsParticles.load("particles", { preset:"snow", particles:{number:{value:80}} });
   }
-
-  // Reveal everything
-  document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
 }
 
-// Same init(), searchCity(), shareForecast() as before — just paste them here
+// Init + search same as before (IP → loadWeather)
 async function init() {
-  const ip = await fetch("https://ipwho.is/").then(r => r.json());
-  document.getElementById("location").setAttribute("data-text", `${ip.city}, ${ip.country}`);
+  const ip = await fetch("https://ipwho.is/").then(r=>r.json());
   loadWeather(ip.latitude, ip.longitude, `${ip.city}, ${ip.country}`);
 }
-
-async function searchCity() { /* same as before */ }
-function shareForecast() { /* same as before */ }
+async function searchCity() {
+  const q = document.getElementById("cityInput").value;
+  const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${q}&count=1`).then(r=>r.json());
+  if (geo.results?.[0]) {
+    const r = geo.results[0];
+    loadWeather(r.latitude, r.longitude, `${r.name}, ${r.country}`);
+  }
+}
+function shareForecast() { navigator.clipboard.writeText(location.href); alert("Link copied!"); }
 
 init();

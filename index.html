@@ -1,82 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Will It Snow?</title>
-  <meta name="description" content="The most beautiful snow forecast on earth."/>
-
-  <!-- Google AdSense (replace when you have yours) -->
+  <meta name="description" content="The most beautiful snow forecast ever made."/>
+  
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189316947862650" crossorigin="anonymous"></script>
-
-  <!-- tsParticles + Confetti + Tilt -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
-
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300..700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div id="particles-js"></div>
-  <div id="confetti"></div>
+  <div id="cursor"></div>
+  <div id="particles"></div>
 
-  <main class="container">
-    <div class="hero" data-tilt data-tilt-glare data-tilt-max-glare="0.4">
-      <h1 id="location" class="glitch" data-text="">Detecting…</h1>
-      <div id="answer" class="answer reveal">…</div>
-      <div id="timer" class="timer floating"></div>
-      <div id="streak" class="streak floating"></div>
-      <div class="confidence reveal">
-        Confidence <span id="confidence" class="gradient-text">–</span>/100
+  <main class="scene">
+    <section class="hero">
+      <h1 id="location" class="city-title">—</h1>
+      <div id="answer" class="answer-text">—</div>
+      <div class="details">
+        <div id="timer" class="detail-line"></div>
+        <div id="streak" class="detail-line"></div>
+        <div class="confidence-bar">
+          <span>Confidence</span>
+          <div class="bar"><div id="bar-fill"></div></div>
+          <span id="confidence">0</span><small>%</small>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Search -->
-    <div class="search-bar reveal">
-      <input type="text" id="cityInput" placeholder="Another city…" />
-      <button onclick="searchCity()">Go</button>
-    </div>
+    <section class="controls">
+      <div class="search-glass">
+        <input type="text" id="cityInput" placeholder="Another place…" />
+        <button onclick="searchCity()">→</button>
+      </div>
+      <button class="share-glow" onclick="shareForecast()">Share</button>
+    </section>
 
-    <button class="share-btn glass reveal" onclick="shareForecast()">Share this magic</button>
+    <section class="orbit" id="forecast"></section>
 
-    <!-- Forecast -->
-    <div class="forecast-grid" id="forecast"></div>
-
-    <!-- Amazon (now sexy cards) -->
-    <div class="amazon-grid">
-      <h2 class="reveal">Be ready</h2>
-      <div class="products">
-        <a href="https://amzn.to/3WvJ2kL" target="_blank" class="product-card" data-tilt>
+    <section class="products">
+      <h2>Prepare</h2>
+      <div class="grid">
+        <a href="https://amzn.to/3WvJ2kL" target="_blank" class="card" data-tilt data-tilt-glare data-tilt-max-glare="0.8">
           <img src="https://m.media-amazon.com/images/I/81yZ1rXjVPL._AC_SL1500_.jpg" alt="Snow Blower">
-          <span>Snow Blower</span>
         </a>
-        <a href="https://amzn.to/3iYkP9m" target="_blank" class="product-card" data-tilt>
+        <a href="https://amzn.to/3iYkP9m" target="_blank" class="card" data-tilt>
           <img src="https://m.media-amazon.com/images/I/81fVvL3eHsL._AC_SL1500_.jpg" alt="Ice Melt">
-          <span>Ice Melt</span>
         </a>
-        <a href="https://amzn.to/3XmKp1R" target="_blank" class="product-card" data-tilt>
+        <a href="https://amzn.to/3XmKp1R" target="_blank" class="card" data-tilt>
           <img src="https://m.media-amazon.com/images/I/81p1F3qZc9L._AC_SL1500_.jpg" alt="Winter Tires">
-          <span>Winter Tires</span>
         </a>
       </div>
-    </div>
-
-    <div class="ad-banner reveal">
-      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9189316947862650" data-ad-slot="7834567890" data-ad-format="auto"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
+    </section>
   </main>
-
-  <!-- OneSignal -->
-  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-  <script>
-    window.OneSignal = window.OneSignal || [];
-    OneSignal.push(() => OneSignal.init({
-      appId: "5f8e8c9f-2d3a-4b6d-8e5f-9c1d7e3f8a2b",
-      notifyButton: { enable: true, position: "bottom-right", theme: "default", size: "medium" }
-    }));
-  </script>
 
   <script src="script.js"></script>
 </body>

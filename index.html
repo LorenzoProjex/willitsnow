@@ -4,77 +4,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Will It Snow?</title>
-  <meta name="description" content="Instant answer: Will it snow where you are in the next 7 days? YES or NO + countdown + confidence."/>
+  <meta name="description" content="The most beautiful snow forecast on earth."/>
 
-  <!-- Google AdSense – replace ca-pub-XXXX with yours when approved -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189316947862650"
-     crossorigin="anonymous"></script>
+  <!-- Google AdSense (replace when you have yours) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189316947862650" crossorigin="anonymous"></script>
 
-  <!-- tsParticles (snow animation) -->
+  <!-- tsParticles + Confetti + Tilt -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
 
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <div id="particles-js"></div>
+  <div id="confetti"></div>
 
-  <div class="container">
-    <h2 id="location">Detecting your location…</h2>
+  <main class="container">
+    <div class="hero" data-tilt data-tilt-glare data-tilt-max-glare="0.4">
+      <h1 id="location" class="glitch" data-text="">Detecting…</h1>
+      <div id="answer" class="answer reveal">…</div>
+      <div id="timer" class="timer floating"></div>
+      <div id="streak" class="streak floating"></div>
+      <div class="confidence reveal">
+        Confidence <span id="confidence" class="gradient-text">–</span>/100
+      </div>
+    </div>
 
-    <div id="answer" class="big">…</div>
-    <div id="timer"></div>
-    <div id="streak"></div>
-    <div class="confidence">Confidence: <span id="confidence">–</span>/100</div>
-
-    <!-- Change location -->
-    <div class="search">
-      <input type="text" id="cityInput" placeholder="Check another city…" />
+    <!-- Search -->
+    <div class="search-bar reveal">
+      <input type="text" id="cityInput" placeholder="Another city…" />
       <button onclick="searchCity()">Go</button>
     </div>
 
-    <!-- Share button -->
-    <button class="share-btn" onclick="shareForecast()">Share this forecast</button>
+    <button class="share-btn glass reveal" onclick="shareForecast()">Share this magic</button>
 
-    <div class="forecast" id="forecast"></div>
+    <!-- Forecast -->
+    <div class="forecast-grid" id="forecast"></div>
 
-    <!-- Amazon products (these links convert like crazy in winter) -->
-    <div class="amazon">
-      <h3>Be ready when the snow hits</h3>
+    <!-- Amazon (now sexy cards) -->
+    <div class="amazon-grid">
+      <h2 class="reveal">Be ready</h2>
       <div class="products">
-        <a href="https://amzn.to/3WvJ2kL" target="_blank">
+        <a href="https://amzn.to/3WvJ2kL" target="_blank" class="product-card" data-tilt>
           <img src="https://m.media-amazon.com/images/I/81yZ1rXjVPL._AC_SL1500_.jpg" alt="Snow Blower">
+          <span>Snow Blower</span>
         </a>
-        <a href="https://amzn.to/3iYkP9m" target="_blank">
+        <a href="https://amzn.to/3iYkP9m" target="_blank" class="product-card" data-tilt>
           <img src="https://m.media-amazon.com/images/I/81fVvL3eHsL._AC_SL1500_.jpg" alt="Ice Melt">
+          <span>Ice Melt</span>
         </a>
-        <a href="https://amzn.to/3XmKp1R" target="_blank">
+        <a href="https://amzn.to/3XmKp1R" target="_blank" class="product-card" data-tilt>
           <img src="https://m.media-amazon.com/images/I/81p1F3qZc9L._AC_SL1500_.jpg" alt="Winter Tires">
+          <span>Winter Tires</span>
         </a>
       </div>
     </div>
 
-    <!-- AdSense banner -->
-    <div class="ad-banner">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9189316947862650"
-           data-ad-slot="7834567890"
-           data-ad-format="auto"></ins>
+    <div class="ad-banner reveal">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9189316947862650" data-ad-slot="7834567890" data-ad-format="auto"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
-  </div>
+  </main>
 
-  <!-- OneSignal Push Notifications (bell in corner) – works with the test key below -->
+  <!-- OneSignal -->
   <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
   <script>
     window.OneSignal = window.OneSignal || [];
-    OneSignal.push(function() {
-      OneSignal.init({
-        appId: "5f8e8c9f-2d3a-4b6d-8e5f-9c1d7e3f8a2b",
-        notifyButton: { enable: true, position: "bottom-right" },
-      });
-    });
+    OneSignal.push(() => OneSignal.init({
+      appId: "5f8e8c9f-2d3a-4b6d-8e5f-9c1d7e3f8a2b",
+      notifyButton: { enable: true, position: "bottom-right", theme: "default", size: "medium" }
+    }));
   </script>
 
   <script src="script.js"></script>

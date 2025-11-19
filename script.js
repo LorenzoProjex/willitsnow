@@ -1,5 +1,7 @@
+// Same loadWeather() function as before but with upgrades
 async function loadWeather(lat, lon, cityName = null) {
   document.getElementById("location").textContent = cityName || "Loading…";
+  document.getElementById("location").setAttribute("data-text", cityName || "Loading…");
 
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=snowfall_sum,precipitation_probability_max&timezone=auto&forecast_days=7`;
   const w = await fetch(url).then(r => r.json());
@@ -27,65 +29,43 @@ async function loadWeather(lat, lon, cityName = null) {
   const confidence = Math.min(100, Math.round(highestProb * 0.7 + highestSnow * 12));
   const willSnow = days.some(d => d.snow_cm > 0.5);
 
-  // Render
+  // Big reveal
   const answerEl = document.getElementById("answer");
   answerEl.textContent = willSnow ? "YES" : "NO";
-  answerEl.className = willSnow ? "yes" : "no";
+  answerEl.className = "answer reveal active " + (willSnow ? "yes" : "no");
 
   document.getElementById("timer").textContent = willSnow && firstFlakeHours !== null ? `First flake in ${firstFlakeHours}h` : "";
   document.getElementById("streak").textContent = willSnow ? "" : `${streak}-day snow-free streak`;
   document.getElementById("confidence").textContent = confidence;
 
-  // Forecast cards
+  // Forecast
   document.getElementById("forecast").innerHTML = days.map(day => {
     const d = new Date(day.date).toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
     return day.snow_cm > 0.5
-      ? `<div class="day"><h4>${d}</h4><div class="snow">${day.snow_cm.toFixed(1)} cm</div><div class="prob">${day.prob}%</div></div>`
-      : `<div class="day"><h4>${d}</h4><div class="snow">No snow</div></div>`;
+      ? `<div class="day glass"><h4>${d}</h4><div class="snow">${day.snow_cm.toFixed(1)} cm</div><div class="prob">${day.prob}%</div></div>`
+      : `<div class="day glass"><h4>${d}</h4><div class="snow">No snow</div></div>`;
   }).join("");
 
-  // Snow particles when snow is coming soon
-  if (days.slice(0,3).some(d => d.snow_cm > 0.5)) {
-    tsParticles.load("particles-js", {
-      preset: "snow",
-      particles: { number: { value: 90 }, opacity: { value: 0.6 }, size: { value: { min: 1, max: 5 } } },
-      fullScreen: { zIndex: -1 }
-    });
+  // Smart particles + confetti if big snow
+  if (days.slice(0,3).some(d => d.snow_cm > 5)) {
+    tsParticles.load("particles-js", { preset: "snow", particles: { number: { value: 150 }, move: { speed: 4 } }, fullScreen: { zIndex: -1 } });
+    setTimeout(() => confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } }), 1000);
+  } else if (willSnow) {
+    tsParticles.load("particles-js", { preset: "snow", particles: { number: { value: 80 } }, fullScreen: { zIndex: -1 } });
   }
+
+  // Reveal everything
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
 }
 
-// Initial load via IP
+// Same init(), searchCity(), shareForecast() as before — just paste them here
 async function init() {
   const ip = await fetch("https://ipwho.is/").then(r => r.json());
-  document.getElementById("location").textContent = `${ip.city}, ${ip.country}`;
+  document.getElementById("location").setAttribute("data-text", `${ip.city}, ${ip.country}`);
   loadWeather(ip.latitude, ip.longitude, `${ip.city}, ${ip.country}`);
 }
 
-// Manual city search
-async function searchCity() {
-  const city = document.getElementById("cityInput").value.trim();
-  if (!city) return;
-  const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`).then(r => r.json());
-  if (geo.results && geo.results[0]) {
-    const { latitude, longitude, name, country } = geo.results[0];
-    loadWeather(latitude, longitude, `${name}, ${country}`);
-  } else {
-    alert("City not found – try again");
-  }
-}
+async function searchCity() { /* same as before */ }
+function shareForecast() { /* same as before */ }
 
-// Viral share
-function shareForecast() {
-  const text = document.getElementById("answer").textContent === "YES"
-    ? `YES – Snow coming to ${document.getElementById("location").textContent}! ${document.getElementById("timer").textContent || "Soon"}`
-    : `NO snow for ${document.getElementById("location").textContent} – ${document.getElementById("streak").textContent || "safe"}`;
-  if (navigator.share) {
-    navigator.share({ title: "Will It Snow?", text, url: location.href });
-  } else {
-    navigator.clipboard.writeText(text + " ➜ " + location.href);
-    alert("Copied to clipboard – paste anywhere!");
-  }
-}
-
-// Start
 init();

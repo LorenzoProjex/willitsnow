@@ -3,62 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Will It Snow?</title>
-  <meta name="description" content="The most beautiful snow forecast ever made."/>
-  
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9189316947862650" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3/tsparticles.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
-  
+  <title>snow</title>
+  <meta property="og:title" content="Will it snow?" />
+  <meta property="og:description" content="One word. One answer. Pure magic." />
+  <meta property="og:image" content="https://snow.grok.beauty/og.png" />
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300..700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div id="cursor"></div>
-  <div id="particles"></div>
+  <canvas id="bg"></canvas>
 
-  <main class="scene">
-    <section class="hero">
-      <h1 id="location" class="city-title">—</h1>
-      <div id="answer" class="answer-text">—</div>
-      <div class="details">
-        <div id="timer" class="detail-line"></div>
-        <div id="streak" class="detail-line"></div>
-        <div class="confidence-bar">
-          <span>Confidence</span>
-          <div class="bar"><div id="bar-fill"></div></div>
-          <span id="confidence">0</span><small>%</small>
-        </div>
-      </div>
-    </section>
+  <main>
+    <div id="location"></div>
+    <div id="answer"></div>
 
-    <section class="controls">
-      <div class="search-glass">
-        <input type="text" id="cityInput" placeholder="Another place…" />
-        <button onclick="searchCity()">→</button>
-      </div>
-      <button class="share-glow" onclick="shareForecast()">Share</button>
-    </section>
+    <div id="orbit-container"></div>
 
-    <section class="orbit" id="forecast"></section>
+    <div id="ui">
+      <input type="text" id="search" placeholder="another place…" autocomplete="off">
+      <div id="share">Share</div>
+    </div>
 
-    <section class="products">
-      <h2>Prepare</h2>
-      <div class="grid">
-        <a href="https://amzn.to/3WvJ2kL" target="_blank" class="card" data-tilt data-tilt-glare data-tilt-max-glare="0.8">
-          <img src="https://m.media-amazon.com/images/I/81yZ1rXjVPL._AC_SL1500_.jpg" alt="Snow Blower">
-        </a>
-        <a href="https://amzn.to/3iYkP9m" target="_blank" class="card" data-tilt>
-          <img src="https://m.media-amazon.com/images/I/81fVvL3eHsL._AC_SL1500_.jpg" alt="Ice Melt">
-        </a>
-        <a href="https://amzn.to/3XmKp1R" target="_blank" class="card" data-tilt>
-          <img src="https://m.media-amazon.com/images/I/81p1F3qZc9L._AC_SL1500_.jpg" alt="Winter Tires">
-        </a>
-      </div>
-    </section>
+    <div id="products"></div>
   </main>
+
+  <audio id="sound" src="https://assets.codepen.io/605876/snow-crack.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
